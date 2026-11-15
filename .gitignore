@@ -1,0 +1,8 @@
+bin/
+obj/
+temp/
+docs/
+cache/
+*.gdt.pb
+out/
+**/__pycache__/

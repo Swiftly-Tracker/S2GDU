@@ -1,0 +1,19 @@
+[Unit]
+Description=S2GDU Automation
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/s2gdu/app
+EnvironmentFile=/opt/s2gdu/service.env
+ExecStart=/opt/s2gdu/app/S2GDU.Automation
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=45
+KillMode=control-group
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

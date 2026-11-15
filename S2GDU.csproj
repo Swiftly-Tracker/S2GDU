@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="S2GDU.Ida\S2GDU.Ida.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="S2GDU.Ida\**\*.cs" />
+    <Compile Remove="S2GDU.Ida.Codegen\**\*.cs" />
+    <Compile Remove="S2GDU.Automation\**\*.cs" />
+    <Content Remove="S2GDU.Automation\**" />
+    <None Remove="S2GDU.Automation\**" />
+    <Compile Remove="cache\**" />
+    <Compile Remove="thirdparty\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Spectre.Console" Version="0.57.2" />
+  </ItemGroup>
+
+</Project>

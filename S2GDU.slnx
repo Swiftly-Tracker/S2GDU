@@ -1,0 +1,6 @@
+<Solution>
+    <Project Path="S2GDU.csproj" />
+    <Project Path="S2GDU.Ida\S2GDU.Ida.csproj" />
+    <Project Path="S2GDU.Ida.Codegen\S2GDU.Ida.Codegen.csproj" />
+    <Project Path="S2GDU.Automation\S2GDU.Automation.csproj" />
+</Solution>

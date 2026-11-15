@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package s2gdu;
+
+option csharp_namespace = "S2GDU.Ida.Model.Proto";
+
+enum ModulePriority {
+  SIGNATURE = 0;
+  UNIQUE_STR = 1;
+  CONVAR = 2;
+  VTABLE = 3;
+  LIBRARY = 4;
+  RELATIONAL = 5;
+  DATA_PTR = 6;
+  PROXIMITY = 7;
+  CALLCHAIN = 8;
+  XREF = 9;
+}
+
+enum MatchVerdict {
+  NONE = 0;
+  AMBIGUOUS = 1;
+  MATCH = 2;
+}
+
+message Signature {
+  bytes pattern = 1;
+  bytes mask = 2;
+  uint32 offset = 3;
+}
+
+message Identity {
+  string return_type = 1;
+  repeated string param_types = 2;
+  uint32 param_count = 3;
+  bool has_return = 4;
+  bool has_indirect_call = 5;
+  bool has_switch = 6;
+  uint32 struct_flags = 7;
+}
+
+message Reinforcement {
+  uint32 size = 1;
+  uint32 bb_count = 2;
+  uint32 cyclomatic = 3;
+  uint32 caller_count = 4;
+  uint32 callee_count = 5;
+  repeated string strings = 6;
+  repeated uint64 constants = 7;
+}
+
+message Anchor {
+  ModulePriority priority = 1;
+  string name = 2;
+  Signature signature = 3;
+  uint32 index = 4;
+  uint32 vtable_size = 5;
+  uint32 vtable_neighbor_before = 6;
+  uint32 vtable_neighbor_after = 7;
+  uint64 rva = 8;
+  uint32 fanout = 9;
+  uint64 resolved_ea = 10;
+  uint32 chain_depth = 11;
+  uint32 chain_directions = 12;
+  uint32 chain_landmark_type = 13;
+  uint32 func_size = 14;
+}
+
+message MatchResult {
+  MatchVerdict verdict = 1;
+  uint64 matched_ea = 2;
+  string method = 3;
+  uint32 votes = 4;
+  uint32 structural = 5;
+  bool identity_passed = 6;
+  float reinforcement_score = 7;
+}
+
+message TrackedFunc {
+  string name = 1;
+  uint64 original_ea = 2;
+  Identity identity = 3;
+  Reinforcement reinforcement = 4;
+  repeated Anchor anchors = 5;
+  Signature export_sig = 6;
+  Signature tracking_sig = 7;
+  uint32 prologue_length = 8;
+  int32 sig_offset = 9;
+  repeated uint32 mid_context = 10;
+  string vtable_class = 11;
+  int32 vtable_offset = 12;
+  MatchResult last_match = 13;
+  optional int32 field_offset = 14;
+}
+
+message ClueFile {
+  uint32 schema_version = 1;
+  string binary_name = 2;
+  repeated TrackedFunc functions = 3;
+}
