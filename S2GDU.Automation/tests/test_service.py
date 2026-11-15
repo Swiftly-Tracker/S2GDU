@@ -20,7 +20,7 @@ j = pathlib.Path(sys.argv[2]); data = json.loads(j.read_text())
 (j.parent / 'pipeline.log').write_text('test pipeline')
 if data['Request']['DumpsTag'] == 'fail-tag': sys.exit(7)
 time.sleep(0.25)
-a = j.parent / 'artifacts'; a.mkdir(); (a / 'test.gdt.pb.7z').write_bytes(b'test-clues')
+a = j.parent / 'artifacts'; a.mkdir(); (a / 'test.gdu.pb.7z').write_bytes(b'test-clues')
 if data['Request']['PublishRelease']:
     (j.parent / 'publish_receipt.json').write_text(json.dumps({'url':'https://github.com/Swiftly-Tracker/S2GDU-GameData/releases/tag/test','tag':'gd-test','id':1,'assets':[{'name':'clues.7z','url':'https://github.com/Swiftly-Tracker/S2GDU-GameData/releases/download/test/clues.7z'}]}))
 ''')

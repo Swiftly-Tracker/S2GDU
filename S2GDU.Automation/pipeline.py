@@ -149,7 +149,7 @@ def pipeline(root, jobfile):
     if publish_release:
         reports = collect_reports(clues_dir)
         clues_archive_out = jobdir / 'clues.7z'
-        members = sorted(clues_dir.glob('*.gdt.pb')) + sorted(clues_dir.glob('*.report.json'))
+        members = sorted(clues_dir.glob('*.gdu.pb')) + sorted(clues_dir.glob('*.report.json'))
         compress(clues_archive_out, members)
         metadata_file = jobdir / 'release.json'
         atomic_json(metadata_file, {'dumpsTag': tag, 'baselineDumpsTag': baseline_tag,

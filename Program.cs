@@ -427,7 +427,7 @@ public static class Program
               s2gdu fetch     [--tag <tag|latest>] [--cache <dir>] [--repo <owner/name>] [regex]
               s2gdu import    --input <dir> --seed <dir> --out <dir> [regex]
               s2gdu backtrack --input <dir> --clues <dir> --out <dir> [regex]
-              s2gdu track     --input <db.i64> [--clue <file.gdt.pb>] [--out <file.gdt.pb>] <name|0xEA> ...
+              s2gdu track     --input <db.i64> [--clue <file.gdu.pb>] [--out <file.gdu.pb>] <name|0xEA> ...
               s2gdu gensig    --input <db.i64> <name|0xEA> ...
               s2gdu export    --clues <dir|file> --out <dir> [--layout <dir>] [regex]
               s2gdu list      --clues <dir|file> [regex]
@@ -440,7 +440,7 @@ public static class Program
 
             [regex] filters binaries by file name without extension, e.g. "server|engine2".
             fetch prints the resolved tag as its last stdout line: tag=<tag>. GITHUB_TOKEN is used when set.
-            import/backtrack write <binary>.gdt.pb and <binary>.report.json into --out.
+            import/backtrack write <binary>.gdu.pb and <binary>.report.json into --out.
             --seed takes a SwiftlyS2 gamedata directory holding signatures.jsonc and offsets.jsonc.
             export writes signatures.jsonc and offsets.jsonc into the --out directory.
             """);

@@ -37,9 +37,9 @@ class ReleaseTests(unittest.TestCase):
 
     @unittest.skipUnless(shutil.which('7z') or shutil.which('7zz'), '7-Zip unavailable')
     def test_real_archive_flat_common_and_duplicate_paths(self):
-        for name in ('server.gdt.pb', 'engine2.gdt.pb', 'tier0.gdt.pb'):
+        for name in ('server.gdu.pb', 'engine2.gdu.pb', 'tier0.gdu.pb'):
             (self.root / name).write_bytes((name * 100).encode())
-        files = list(self.root.glob('*.gdt.pb'))
+        files = list(self.root.glob('*.gdu.pb'))
         archive = self.root / 'clues.7z'
         release.compress(archive, files)
         output = self.root / 'extracted'
@@ -63,7 +63,7 @@ class ReleaseTests(unittest.TestCase):
 
     def test_publish_verifies_then_cleanup_keeps_metadata(self):
         (self.root / 'clues').mkdir()
-        (self.root / 'clues' / 'server.gdt.pb').write_bytes(b'payload')
+        (self.root / 'clues' / 'server.gdu.pb').write_bytes(b'payload')
         with patch.object(release, 'api', self.api):
             receipt = release.publish(self.root, 'gd-abc', 'GameData abc', [self.archive])
         self.assertFalse(self.draft)

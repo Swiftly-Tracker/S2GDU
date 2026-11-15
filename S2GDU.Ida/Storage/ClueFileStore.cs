@@ -9,7 +9,7 @@ public sealed record ClueFile(string BinaryName, List<TrackedFunc> Functions);
 public static class ClueFileStore
 {
     public const uint SchemaVersion = 2;
-    public const string Extension = ".gdt.pb";
+    public const string Extension = ".gdu.pb";
 
     public static ClueFile Read(string path)
     {

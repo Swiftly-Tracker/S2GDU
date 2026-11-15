@@ -37,10 +37,10 @@ class PipelineBaselineTests(unittest.TestCase):
             target.write_text(json.dumps({'dumpsTag': release['_metadata_tag']}))
         def fake_run_import(root, job, jobdir, input_dir, seed_file, clues_dir, binary_regex):
             imports.append(binary_regex)
-            (clues_dir / 'server.gdt.pb').write_bytes(b'clue')
+            (clues_dir / 'server.gdu.pb').write_bytes(b'clue')
         def fake_run_backtrack(root, job, jobdir, input_dir, previous_clues_dir, clues_dir, binary_regex):
             backtracks.append(binary_regex)
-            (clues_dir / 'server.gdt.pb').write_bytes(b'clue')
+            (clues_dir / 'server.gdu.pb').write_bytes(b'clue')
             (clues_dir / 'server.report.json').write_text(json.dumps({'total': 1}))
         def fake_run_export(root, clues_dir, out_dir):
             exports.append(out_dir.name)

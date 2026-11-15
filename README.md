@@ -11,7 +11,7 @@ Carries a set of gamedata signatures and vtable offsets from one CS2 build to th
 ## What it does
 
 - **Dump fetching** - downloads a CS2-IDA-Dumps release's `.i64.7z` archives in parallel. It verifies each archive and each extracted database against the release's `provenance.json` SHA-256s and caches them under `cache/<tag>/`.
-- **Seed import** - reads an existing SwiftlyS2 gamedata directory (`signatures.jsonc` + `offsets.jsonc`) and resolves every signature and vtable offset in the matching database. It crawls each resolved function into a `.gdt.pb` clue file.
+- **Seed import** - reads an existing SwiftlyS2 gamedata directory (`signatures.jsonc` + `offsets.jsonc`) and resolves every signature and vtable offset in the matching database. It crawls each resolved function into a `.gdu.pb` clue file.
 - **Anchor crawling** - ten modules collect identity and reinforcement anchors per function: signature, string, convar, vtable, library, relational, data pointer, proximity, call chain and xref.
 - **Backtracking** - finds every tracked function again in a newer build. It is two-pass: a parallel consensus vote over all anchors, then a rescue pass for the misses. The rescue pass uses calibrated data-pointer deltas and the functions already matched. Functions whose tracking signature still hits uniquely are kept as `SURVIVED` without rematching.
 - **Signature regeneration** - builds the shortest unique signature for each match. It keeps mid-function signature offsets aligned through surrounding-instruction context. Prologue-skipping tracking signatures make the next survival check more robust.
@@ -64,7 +64,7 @@ dotnet publish S2GDU.csproj -c Release \
 s2gdu fetch     [--tag <tag|latest>] [--cache <dir>] [--repo <owner/name>] [regex]
 s2gdu import    --input <dir> --seed <dir> --out <dir> [regex]
 s2gdu backtrack --input <dir> --clues <dir> --out <dir> [regex]
-s2gdu track     --input <db.i64> [--clue <file.gdt.pb>] [--out <file.gdt.pb>] <name|0xEA> ...
+s2gdu track     --input <db.i64> [--clue <file.gdu.pb>] [--out <file.gdu.pb>] <name|0xEA> ...
 s2gdu gensig    --input <db.i64> <name|0xEA> ...
 s2gdu export    --clues <dir|file> --out <dir> [--layout <dir>] [regex]
 s2gdu list      --clues <dir|file> [regex]
@@ -73,9 +73,9 @@ s2gdu list      --clues <dir|file> [regex]
 | Command     | Description                                                                                                                                                                  |
 | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `fetch`     | Download and verify a CS2-IDA-Dumps release into `<cache>/<tag>/`. Already cached databases are reused. Prints the resolved tag as its last stdout line: `tag=<tag>`.        |
-| `import`    | Resolve a SwiftlyS2 seed gamedata directory in every database of `--input` and write `<binary>.gdt.pb` and `<binary>.report.json` into `--out`.                                             |
+| `import`    | Resolve a SwiftlyS2 seed gamedata directory in every database of `--input` and write `<binary>.gdu.pb` and `<binary>.report.json` into `--out`.                                             |
 | `backtrack` | Match the clue files in `--clues` against the newer databases in `--input`, regenerate signatures and write the updated clue files and reports into `--out`.                |
-| `track`     | Add functions (by name or `0x` address) to a database's clue file. Defaults to `<binary>.gdt.pb` next to the database.                                                     |
+| `track`     | Add functions (by name or `0x` address) to a database's clue file. Defaults to `<binary>.gdu.pb` next to the database.                                                     |
 | `gensig`    | Print a unique signature for each function, tab-separated, without touching any clue file.                                                                                   |
 | `export`    | Merge clue files into SwiftlyS2 gamedata (`signatures.jsonc` + `offsets.jsonc` in the `--out` directory). Conflicts are reported; first wins.                              |
 | `list`      | Show every tracked function per clue file with its verdict, address, match method and exported signature or vtable slot.                                                    |
@@ -87,8 +87,8 @@ s2gdu list      --clues <dir|file> [regex]
 | `--cores <n>`              | Concurrent IDA worker processes, and concurrent downloads for `fetch`. Default: all logical processors.                             |
 | `--input <path>`           | `import`/`backtrack`: directory of `.i64` databases (e.g. `cache/<tag>`). `track`/`gensig`: a single `.i64`.                         |
 | `--seed <dir>`             | SwiftlyS2 gamedata directory holding `signatures.jsonc` and/or `offsets.jsonc` to import from.                                      |
-| `--clues <dir\|file>`      | Directory of `.gdt.pb` clue files (or a single file for `export`/`list`).                                                            |
-| `--clue <file.gdt.pb>`     | Clue file `track` adds to.                                                                                                           |
+| `--clues <dir\|file>`      | Directory of `.gdu.pb` clue files (or a single file for `export`/`list`).                                                            |
+| `--clue <file.gdu.pb>`     | Clue file `track` adds to.                                                                                                           |
 | `--out <path>`             | Output directory (`import`/`backtrack`/`export`) or clue file (`track`).                                                            |
 | `--tag <tag\|latest>`      | `fetch` release tag. Default: `latest`.                                                                                              |
 | `--cache <dir>`            | `fetch` cache root. Default: `cache`.                                                                                                |
@@ -120,13 +120,13 @@ S2GDU/
 │   ├── Rtti/                        # VTable symbol to class name normalization
 │   ├── Jobs/                        # import / track / backtrack / gensig over a snapshot
 │   ├── Gamedata/                    # SwiftlyS2 gamedata reader and writer
-│   ├── Storage/                     # .gdt.pb clue file store
+│   ├── Storage/                     # .gdu.pb clue file store
 │   ├── Fetch/                       # CS2-IDA-Dumps release downloader and verifier
 │   ├── Worker/                      # Worker pool + one-database-per-process IPC protocol
 │   ├── Model/                       # Tracked function, anchor and match types
 │   └── Generated/                   # Codegen output: bindings for each vendored IDA SDK version
 ├── S2GDU.Ida.Codegen/               # Header scanner that generates the bindings above from thirdparty/ida-sdk
-├── S2GDU.Proto/                     # clue.proto, the .gdt.pb storage schema
+├── S2GDU.Proto/                     # clue.proto, the .gdu.pb storage schema
 ├── S2GDU.Automation/                # Hosted job service driving the release pipeline (see below)
 └── thirdparty/
     └── ida-sdk/                     # Vendored Hex-Rays IDA SDK headers, one directory per major.minor

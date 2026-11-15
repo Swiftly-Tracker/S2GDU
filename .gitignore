@@ -3,6 +3,6 @@ obj/
 temp/
 docs/
 cache/
-*.gdt.pb
+*.gdu.pb
 out/
 **/__pycache__/
